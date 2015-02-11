@@ -6,7 +6,7 @@
 // C callbacks
 extern "C" {
 // Main host callback
-VstIntPtr VSTCALLBACK hostCallback(AEffect *effect, VstInt32 opcode, VstInt32 index, VstInt32 value, void *ptr, float opt)
+VstIntPtr VSTCALLBACK hostCallback(AEffect *effect, VstInt32 opcode, VstInt32 /*index*/, VstIntPtr /*value*/, void *ptr, float /*opt*/)
 {
 	static const char product_string[] = "QVstHost";
 	switch(opcode) 
@@ -42,8 +42,8 @@ VstIntPtr VSTCALLBACK hostCallback(AEffect *effect, VstInt32 opcode, VstInt32 in
 }
 }
 
-// 's entry point
-typedef AEffect *(*vstFuncPtr)(audioMasterCallback host);
+// plugin's entry point
+typedef AEffect *(VSTCALLBACK *vstFuncPtr)(audioMasterCallback host);
 
 struct QVstPlugin::Data
 {
@@ -1104,7 +1104,6 @@ QList< QVector<float> > QVstChain::process(const QList< QVector<float> > & in)
 	if (canProcess(in.count()))
 	{
 		out = in;
-		const int links = linksCount();
 		for (QVstChain::iterator i = begin(); i != end(); i++)
 		{
 			while (out.count() < i->inputsCount())
@@ -1127,7 +1126,6 @@ QList< QVector<double> > QVstChain::process(const QList< QVector<double> > & in)
 	if (canProcess(in.count()))
 	{
 		out = in;
-		const int links = linksCount();
 		for (QVstChain::iterator i = begin(); i != end(); i++)
 		{
 			while (out.count() < i->inputsCount())
